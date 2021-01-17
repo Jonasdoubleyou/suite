@@ -1,0 +1,35 @@
+CREATE USER login PASSWORD 'login_REPLACE_ME!';
+
+CREATE TABLE IF NOT EXISTS login_user(
+    uid INT PRIMARY KEY,
+    username VARCHAR UNIQUE,
+);
+
+CREATE TABLE IF NOT EXISTS login_auth_password(
+    uid      INT     NOT NULL REFERENCES login_user.uid,
+    password VARCHAR NOT NULL,
+    salt     VARCHAR NOT NULL,
+    PRIMARY KEY uid, password, 
+);
+
+CREATE TABLE IF NOT EXISTS login_permission(
+    uid         INT     NOT NULL REFERENCES login_user.uid,
+    service     VARCHAR NOT NULL,
+    type        VARCHAR NOT NULL,
+    value       VARCHAR,
+    PRIMARY KEY uid, application, type, value
+);
+
+CREATE TABLE IF NOT EXISTS login_permission_template(
+    service     VARCHAR NOT NULL,
+    type        VARCHAR NOT NULL,
+    description VARCHAR NOT NULL,
+    value_description VARCHAR /* if null, implies that value is supposed to be NULL */
+);
+
+INSERT INTO TABLE login_permission_template VALUE
+    ('login',  'GLOBAL_ADMIN', 'Has all permissions in all applications', NULL)
+    ('login',  'ACCOUNT_ADMIN', 'Can administrate users and privileges, including changing their authentications. Usually you want to have an ACCOUNT_MANAGER instead.')
+    ('login',  'ACCOUNT_MANAGER', 'Can create users and request various acocunt changes. Cannot change authentication details, as users can do that via self-service.')
+    ('family', 'WRITER',       'Can change all family data',              NULL)
+    ('family', 'READER',       'Can view all family data',                NULL);

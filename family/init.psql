@@ -1,0 +1,51 @@
+CREATE USER family PASSWORD 'family_REPLACE_ME!';
+
+CREATE TABLE IF NOT EXISTS family_person (
+    /* pseudo primary key as names can be changed */
+    uid       INT PRIMARY KEY,
+    lastname  VARCHAR NOT NULL,
+    firstname VARCHAR NOT NULL,
+    birthname VARCHAR,
+    birthdate DATE,
+    deathdate DATE,
+    avatar    INT REFERENCES family_image.uid
+);
+GRANT SELECT, INSERT, UPDATE ON family_person TO family;
+
+CREATE TABLE IF NOT EXISTS family_person_parent (
+    parent INT NOT NULL REFERENCES family_person.uid,
+    child  INT NOT NULL REFERENCES family_person.uid,
+    PRIMARY KEY parent, child
+);
+GRANT SELECT, INSERT, UPDATE, DELETE ON family_person_parent TO family;
+
+CREATE TABLE IF NOT EXISTS family_person_marriage(
+    husband   INT NOT NULL REFERENCES family_person.uid,
+    wife      INT NOT NULL REFERENCES family_person.uid,
+    startdate DATE,
+    enddate   DATE,
+    PRIMARY KEY husband, wife
+);
+GRANT SELECT, INSERT, UPDATE, DELETE ON family_person_marriage TO family; 
+
+CREATE TABLE IF NOT EXISTS family_image(
+    uid     INT NOT NULL PRIMARY KEY,
+    image   VARCHAR NOT NULL
+);
+GRANT SELECT, INSERT ON family_image TO family;
+
+CREATE TABLE IF NOT EXISTS family_story(
+    uid      INT NOT NULL PRIMARY KEY,
+    title    VARCHAR NOT NULL,
+    body     VARCHAR NOT NULL,
+    revision INT     NOT NULL,
+    author   INT     NOT NULL REFERENCES login_user.uid
+);
+GRANT SELECT, INSERT ON family_story TO family;
+
+CREATE TABLE IF NOT EXISTS family_story_participant(
+    title       INT NOT NULL REFERENCES family_story.uid,
+    participant INT NOT NULL REFERENCES login_user.uid,
+    PRIMARY KEY title, participant
+);
+GRANT SELECT, INSERT, DELETE ON family_story_participant TO family;

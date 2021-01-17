@@ -1,0 +1,32 @@
+{
+    "global": {
+        "db_host": "localhost",
+        "db_database": "suite",
+        "db_port": 5432
+    },
+    "services": {
+        "login":  {
+            "name": "Login Service",
+            "url": "https://localhost:5001",
+            "secret_token": "LOGIN_replace_me!",
+            "db_user":      "login",
+            "db_password":  "login_REPLACE_ME!", 
+            "port": 5001
+        },
+        "family":  {
+            "name": "Family Service",
+            "url": "https://localhost:5002",
+            "secret_token": "FAMILY_replace_me!",
+            "db_user":      "family",
+            "db_password":  "family_RELACE_ME!",
+            "port": 5002
+        },
+        "admin": {
+            "NOTE": "The Admin Service is not a service per se. It is you. You can use the secret_token to perform certain actions",
+            "name": "The Admin", 
+            "url": "https://localhost",
+            "secret_token": "ADMIN!",
+            "port": 0
+        }
+    }
+}
